@@ -28,7 +28,7 @@ const ModeToggle = () => {
       <DropdownMenuTrigger asChild>
         <Button
           variant={"ghost"}
-          className="focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="focus-visible:ring-0 focus-visible:ring-offset-0 cursor-pointer"
         >
           {theme === "system" ? (
             <SunMoon />
@@ -45,18 +45,21 @@ const ModeToggle = () => {
         <DropdownMenuCheckboxItem
           checked={theme === "light"}
           onClick={() => setTheme("light")}
+          className="cursor-pointer"
         >
           Light
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
           checked={theme === "dark"}
           onClick={() => setTheme("dark")}
+          className="cursor-pointer"
         >
           Dark
         </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem
           checked={theme === "system"}
           onClick={() => setTheme("system")}
+          className="cursor-pointer"
         >
           System
         </DropdownMenuCheckboxItem>
