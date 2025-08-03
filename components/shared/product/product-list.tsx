@@ -1,4 +1,5 @@
 import { FC } from "react";
+import ProductCard from "./product-card";
 
 type ProductListProps = {
     data: any;
@@ -12,10 +13,8 @@ const ProductList: FC<ProductListProps> = ({ data, title, limit }) => {
         <h2 className="font-bold mb-4">{title}</h2>
         {data && data.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {limitedData.map((product: any, index: number) => (
-                    <div key={index} className="border p-4">
-                        <h3 className="font-bold">{product.name}</h3>
-                    </div>
+                {limitedData.map((product: any) => (
+                    <ProductCard key={product.slug} product={product} />
                 ))}
             </div>
         ) : (
