@@ -5,7 +5,7 @@ import "./globals.css";
 
 import { APP_NAME, APP_DESCRIPTION, SERVER_URL } from "@/lib/constants";
 
-export const geistInter = Inter({
+const geistInter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
