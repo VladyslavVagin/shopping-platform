@@ -1,6 +1,7 @@
 'use server'
 
 import { PrismaClient } from "../generated/prisma";
+import { toPlainObject } from "../utils";
 
 // get latest products
 export async function getLatestProducts() {
@@ -11,5 +12,5 @@ export async function getLatestProducts() {
         },
         take: 4,
     });
-    return data;
+    return toPlainObject(data);
 }
