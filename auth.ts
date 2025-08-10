@@ -1,16 +1,14 @@
 import NextAuth from "next-auth";
-import type { NextAuthOptions } from "next-auth";
+import type { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { compareSync } from "bcrypt-ts-edge";
 import { prisma } from "./db/prisma";
 
-export const config: NextAuthOptions = {
+const config = {
+  secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/auth/signin",
-    signOut: "/auth/signout",
-    error: "/auth/error",
-    verifyRequest: "/auth/verify-request"
+    signIn: "/auth/sign-in"
   },
   session: {
     strategy: "jwt",
@@ -23,16 +21,21 @@ export const config: NextAuthOptions = {
         email: { label: "Email", type: "text", placeholder: "you@example.com" },
         password: { label: "Password", type: "password" }
       },
-      async authorize(credentials: Record<"email" | "password", string> | undefined) {
-        if (!credentials) return null;
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) return null;
         
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email }
+          where: { email: credentials.email as string }
         });
+        
         if (user && user.password) {
-          const isMatch = compareSync(credentials.password, user.password);
+          const isMatch = compareSync(credentials.password as string, user.password);
           if (isMatch) {
-            return user;
+            return {
+              id: user.id,
+              email: user.email,
+              name: user.name,
+            };
           }
         }
         return null;
@@ -40,16 +43,19 @@ export const config: NextAuthOptions = {
     })
   ],
   callbacks: {
-    async session({ session, user, trigger, token }) {
+    async session({ session, token }) {
       if (token?.sub && session.user) {
-        (session.user as { id?: string }).id = token.sub;
-      }
-      if(trigger === "update" && user && session.user) {
-        session.user.name = user.name;
+        session.user.id = token.sub;
       }
       return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.sub = user.id;
+      }
+      return token;
     }
   }
-};
+} satisfies NextAuthConfig;
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config);
