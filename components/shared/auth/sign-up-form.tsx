@@ -16,7 +16,7 @@ const SignUpForm = () => {
   const { pending } = useFormStatus();
   const [data, action] = useActionState(signUpUser, {
     success: false,
-    message: "",
+    message: Promise.resolve(""),
   });
 
 
@@ -29,8 +29,8 @@ const SignUpForm = () => {
           <Input
             id="name"
             type="text"
-            name="name"
             required
+            name="name"
             autoComplete="name"
             defaultValue={signUpDefaultValues.name}
           />
@@ -40,8 +40,8 @@ const SignUpForm = () => {
           <Input
             id="email"
             type="email"
-            name="email"
             required
+            name="email"
             autoComplete="email"
             defaultValue={signUpDefaultValues.email}
           />

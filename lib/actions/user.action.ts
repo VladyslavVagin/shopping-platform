@@ -5,6 +5,7 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { hashSync } from "bcrypt-ts-edge";
 import { prisma } from "@/db/prisma";
 import { signIn, signOut } from "@/auth";
+import { FormatError } from "../utils";
 
 // Sign Up user
 export async function signUpUser(prevState: unknown, formData: FormData) {
@@ -36,7 +37,7 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
     if (isRedirectError(error)) {
       throw error; // Re-throw redirect errors
     }
-    return { success: false, message: "An error occurred" };
+    return { success: false, message: FormatError(error) };
   }
 }
 
