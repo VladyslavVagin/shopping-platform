@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import { getProductBySlug } from "@/lib/actions/product.action";
 import ProductPrice from "@/components/shared/product/product-price";
-import { Button, Badge, Card, CardContent } from "@/components/ui";
+import { Badge, Card, CardContent } from "@/components/ui";
 import ProductImages from "@/components/shared/product/product-images";
+import AddToCart from "@/components/shared/product/add-to-cart";
 
 const ProductsDetailsPage = async (props: {
   params: Promise<{ slug: string }>;
@@ -15,7 +16,7 @@ const ProductsDetailsPage = async (props: {
       <div className="grid grid-cols-1 md:grid-cols-5">
         {/* Images column */}
         <div className="col-span-2">
-            <ProductImages images={product.images} />
+          <ProductImages images={product.images} />
         </div>
         {/* Details column */}
         <div className="col-span-2 p-5">
@@ -57,8 +58,20 @@ const ProductsDetailsPage = async (props: {
                   <Badge variant="destructive">Out of Stock</Badge>
                 )}
               </div>
-              {product.stock > 0 && <div className="items-center">
-                <Button className="w-full cursor-pointer">Add To Cart</Button></div>}
+              {product.stock > 0 && (
+                <div className="items-center">
+                  <AddToCart
+                    item={{
+                      productId: product.id,
+                      name: product.name,
+                      slug: product.slug,
+                      price: product.price,
+                      qty: 1,
+                      image: product.images![0],
+                    }}
+                  />
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

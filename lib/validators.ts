@@ -35,3 +35,23 @@ export const signInFormSchema = z.object({
   email: z.email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters long"),
 });
+
+// Cart schema
+export const cartItemSchema = z.object({
+  productId: z.string().min(1, "Product ID is required"),
+  name: z.string().min(2, "Name must be at least 2 characters long"),
+  slug: z.string().min(2, "Slug must be at least 2 characters long"),
+  qty: z.number().int().nonnegative("Quantity must be a non-negative integer"),
+  image: z.string().min(2, "Image URL must be at least 2 characters long"),
+  price: currency,
+});
+
+export const insertCartSchema = z.object({
+  items: z.array(cartItemSchema),
+  itemsPrice: currency,
+  totalPrice: currency,
+  shippingPrice: currency,
+  textPrice: currency,
+  sessionCardId: z.string().min(1, "Session Card ID is required"),
+  userId: z.string().optional().nullable(),
+});
