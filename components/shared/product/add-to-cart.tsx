@@ -1,8 +1,9 @@
 "use client";
 
+import { useTransition } from "react";
 import { Button } from "@/components/ui";
 import { useRouter } from "next/navigation";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, Loader } from "lucide-react";
 import { toast } from "sonner";
 import type { Cart, CartItem } from "@/types";
 import { addItemToCart, removeItemFromCart } from "@/lib/actions/cart.action";
@@ -14,22 +15,26 @@ type Props = {
 
 const AddToCart = ({ item, cart }: Props) => {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   const handleAddToCart = async () => {
-    const res = await addItemToCart(item);
-    if (!res.success) {
-      toast.error(res.message);
-      return;
-    }
-    toast.success(`${item.name} added to cart`, {
-      action: {
-        label: "Go to Cart",
-        onClick: () => router.push("/cart"),
-      },
+    startTransition(async () => {
+      const res = await addItemToCart(item);
+      if (!res.success) {
+        toast.error(res.message);
+        return;
+      }
+      toast.success(`${item.name} added to cart`, {
+        action: {
+          label: "Go to Cart",
+          onClick: () => router.push("/cart"),
+        },
+      });
     });
   };
 
   const handleRemoveFromCart = async () => {
+    startTransition(async () => {
       const res = await removeItemFromCart(item.productId);
       if (!res.success) {
         toast.error(res.message);
@@ -41,6 +46,7 @@ const AddToCart = ({ item, cart }: Props) => {
           onClick: () => router.push("/cart"),
         },
       });
+    });
   };
 
   // Check if items is exist in cart
@@ -55,7 +61,11 @@ const AddToCart = ({ item, cart }: Props) => {
         className="cursor-pointer"
         onClick={handleRemoveFromCart}
       >
-        <Minus className="w-4 h-4" />
+        {isPending ? (
+          <Loader className="w-4 h-4 animate-spin" />
+        ) : (
+          <Minus className="w-4 h-4" />
+        )}
       </Button>
       <span className="px-2">{existItem?.qty}</span>
       <Button
@@ -64,7 +74,11 @@ const AddToCart = ({ item, cart }: Props) => {
         className="cursor-pointer"
         onClick={handleAddToCart}
       >
-        <Plus className="w-4 h-4" />
+        {isPending ? (
+          <Loader className="w-4 h-4 animate-spin" />
+        ) : (
+          <Plus className="w-4 h-4" />
+        )}
       </Button>
     </div>
   ) : (
@@ -73,7 +87,12 @@ const AddToCart = ({ item, cart }: Props) => {
       className="w-full cursor-pointer"
       onClick={handleAddToCart}
     >
-      <Plus /> Add to Cart
+      {isPending ? (
+        <Loader className="w-4 h-4 animate-spin" />
+      ) : (
+        <Plus className="w-4 h-4" />
+      )}{" "}
+      Add to Cart
     </Button>
   );
 };

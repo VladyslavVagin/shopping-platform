@@ -48,3 +48,21 @@ export function round2(value: number | string) {
     throw new Error('Invalid input type');
   }
 }
+
+const CURRENCY_FORMATTER = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+export function formatCurrency(amount: number | string | null): string {
+  if (typeof amount === 'number') {
+    return CURRENCY_FORMATTER.format(amount);
+  } else if (typeof amount === 'string') {
+    const parsed = parseFloat(amount);
+    return isNaN(parsed) ? '$0.00' : CURRENCY_FORMATTER.format(parsed);
+  } else {
+    return '$0.00';
+  }
+}
