@@ -1,8 +1,8 @@
 import NextAuth from "next-auth";
-import type { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { compareSync } from "bcrypt-ts-edge";
+import { authConfig } from './auth.config';
 import { prisma } from "./db/prisma";
 
 const config = {
@@ -11,7 +11,7 @@ const config = {
     signIn: "/auth/sign-in"
   },
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as const,
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   adapter: PrismaAdapter(prisma),
@@ -44,7 +44,8 @@ const config = {
     })
   ],
   callbacks: {
-    async session({ session, user, trigger, token }) {
+    ...authConfig.callbacks,
+    async session({ session, user, trigger, token }: any) {
       if (token?.sub && session.user) {
         session.user.id = token.sub;
         session.user.role = token.role as string;
@@ -56,7 +57,7 @@ const config = {
       }
       return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user }: any) {
       if (user) {
         token.role = user?.role;
         if(user.name === 'NO_NAME') {
@@ -70,6 +71,6 @@ const config = {
       return token;
     }
   }
-} satisfies NextAuthConfig;
+};
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config);
