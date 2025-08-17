@@ -14,12 +14,12 @@ const calcPrice = (items: CartItem[]) => {
     items.reduce((acc, item) => acc + Number(item.price) * item.qty, 0)
   );
   const shippingPrice = round2(itemsPrice > 100 ? 0 : 10);
-  const textPrice = round2(0.15 * itemsPrice);
-  const totalPrice = round2(itemsPrice + shippingPrice + textPrice);
+  const taxPrice = round2(0.15 * itemsPrice);
+  const totalPrice = round2(itemsPrice + shippingPrice + taxPrice);
   return {
     itemsPrice: itemsPrice.toFixed(2),
     shippingPrice: shippingPrice.toFixed(2),
-    textPrice: textPrice.toFixed(2),
+    taxPrice: taxPrice.toFixed(2),
     totalPrice: totalPrice.toFixed(2),
   };
 };
@@ -100,7 +100,7 @@ export async function addItemToCart(data: CartItem) {
           items: updatedItems,
           itemsPrice: updatedPrices.itemsPrice,
           shippingPrice: updatedPrices.shippingPrice,
-          textPrice: updatedPrices.textPrice,
+          taxPrice: updatedPrices.taxPrice,
           totalPrice: updatedPrices.totalPrice,
         },
       });
@@ -141,7 +141,7 @@ export async function getMyCart() {
     itemsPrice: cart?.itemsPrice.toString(),
     totalPrice: cart?.totalPrice.toString(),
     shippingPrice: cart?.shippingPrice.toString(),
-    textPrice: cart?.textPrice.toString(),
+    taxPrice: cart?.taxPrice.toString(),
   });
 }
 
@@ -176,7 +176,7 @@ export async function removeItemFromCart(productId: string) {
         items: cart.items,
         itemsPrice: calcPrice(cart.items).itemsPrice,
         shippingPrice: calcPrice(cart.items).shippingPrice,
-        textPrice: calcPrice(cart.items).textPrice,
+        taxPrice: calcPrice(cart.items).taxPrice,
         totalPrice: calcPrice(cart.items).totalPrice,
       },
     });

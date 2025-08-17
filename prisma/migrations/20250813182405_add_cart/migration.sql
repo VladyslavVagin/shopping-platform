@@ -7,7 +7,7 @@ CREATE TABLE "public"."Cart" (
     "itemsPrice" DECIMAL(12,2) NOT NULL DEFAULT 0.00,
     "totalPrice" DECIMAL(12,2) NOT NULL DEFAULT 0.00,
     "shippingPrice" DECIMAL(12,2) NOT NULL DEFAULT 0.00,
-    "textPrice" DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+    "taxPrice" DECIMAL(12,2) NOT NULL DEFAULT 0.00,
     "createdAt" TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Cart_pkey" PRIMARY KEY ("id")

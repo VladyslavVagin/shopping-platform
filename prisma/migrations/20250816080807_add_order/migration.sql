@@ -7,7 +7,7 @@ CREATE TABLE "public"."Order" (
     "paymentResult" JSON,
     "itemsPrice" DECIMAL(12,2) NOT NULL,
     "shippingPrice" DECIMAL(12,2) NOT NULL,
-    "textPrice" DECIMAL(12,2) NOT NULL,
+    "taxPrice" DECIMAL(12,2) NOT NULL,
     "totalPrice" DECIMAL(12,2) NOT NULL,
     "isPaid" BOOLEAN NOT NULL DEFAULT false,
     "isDelivered" BOOLEAN NOT NULL DEFAULT false,
